@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Music Starter</title>
+  <style>
+    :root { color-scheme: light dark; --bg:#f6f3ee; --surface:#fffdf9; --text:#26231f; --muted:#706b63; --line:#ded8ce; --accent:#6d4aff; --soft:#ede8ff; --shadow:0 14px 38px rgba(45,37,28,.08); }
+    @media (prefers-color-scheme: dark) { :root { --bg:#171614; --surface:#211f1c; --text:#f4f0e8; --muted:#aaa49a; --line:#3a3732; --accent:#a996ff; --soft:#30294d; --shadow:none; } }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.5; }
+    button { font:inherit; }
+    main { width:min(940px,calc(100% - 28px)); margin:auto; padding:36px 0 64px; }
+    header { margin:0 4px 22px; }
+    h1,h2,h3,p { margin-top:0; }
+    h1 { margin-bottom:7px; font-size:clamp(1.8rem,5vw,2.65rem); line-height:1.12; }
+    h2 { margin-bottom:0; font-size:1.16rem; }
+    h3 { margin-bottom:8px; font-size:.98rem; }
+    .eyebrow { margin:0 0 5px; color:var(--muted); font-size:.72rem; font-weight:750; letter-spacing:.12em; text-transform:uppercase; }
+    .muted,.note,.status { color:var(--muted); }
+    .flow { display:flex; flex-wrap:wrap; gap:7px; margin-top:5px; color:var(--muted); font-size:.84rem; }
+    .card { margin-top:14px; padding:clamp(17px,3.5vw,25px); border:1px solid var(--line); border-radius:17px; background:var(--surface); box-shadow:var(--shadow); }
+    .card-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; }
+    .question + .question { margin-top:18px; }
+    .choices { display:grid; grid-template-columns:repeat(auto-fit,minmax(128px,1fr)); gap:8px; }
+    .choice,.button { min-height:42px; padding:9px 13px; border:1px solid var(--line); border-radius:11px; background:transparent; color:var(--text); cursor:pointer; transition:border-color .15s,background .15s,transform .15s; }
+    .choice:hover,.button:hover { border-color:var(--accent); transform:translateY(-1px); }
+    .choice[aria-pressed="true"] { border-color:var(--accent); background:var(--soft); font-weight:650; }
+    .music { border-color:color-mix(in srgb,var(--accent) 45%,var(--line)); }
+    .prompt { margin:0 0 17px; padding-left:15px; border-left:4px solid var(--accent); font-size:1.03rem; line-height:1.6; user-select:text; }
+    .actions { display:flex; flex-wrap:wrap; align-items:center; gap:9px; }
+    .primary { border-color:var(--accent); background:var(--accent); color:#fff; font-weight:700; }
+    .status { min-height:1.2em; font-size:.82rem; }
+    .note { margin:11px 0 0; font-size:.78rem; }
+    .privacy { display:flex; gap:8px; align-items:flex-start; margin:16px 4px 0; color:var(--muted); font-size:.78rem; }
+    @media (prefers-color-scheme:dark) { .primary { color:#17141f; } }
+    @media (max-width:680px) { main{padding-top:24px}.card-head{align-items:flex-start;flex-direction:column}.primary{width:100%} }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">Music Starter</p>
+      <h1>先放音乐，再开始</h1>
+      <p class="muted">凭直觉点几下，生成今天的 Spotify DJ request。</p>
+      <div class="flow"><span>① 选感觉</span><span>→</span><span>② 复制并打开 DJ</span><span>→</span><span>③ 开始做事</span></div>
+    </header>
+
+    <section class="card" aria-labelledby="quiz-title">
+      <div class="card-head">
+        <div><p class="eyebrow">约 15 秒</p><h2 id="quiz-title">今天想怎样进入状态？</h2></div>
+        <button class="button" id="surprise" type="button">🎲 今天帮我选</button>
+      </div>
+
+      <div class="question"><h3>🎨 今天的颜色</h3><div class="choices" data-group="color">
+        <button class="choice" type="button" aria-pressed="true" data-value="blue">🟦 深蓝</button><button class="choice" type="button" aria-pressed="false" data-value="green">🟩 苔绿</button><button class="choice" type="button" aria-pressed="false" data-value="yellow">🟨 暖黄</button><button class="choice" type="button" aria-pressed="false" data-value="orange">🟧 日落橙</button><button class="choice" type="button" aria-pressed="false" data-value="purple">🟪 紫色</button><button class="choice" type="button" aria-pressed="false" data-value="silver">⬛ 黑银</button>
+      </div></div>
+
+      <div class="question"><h3>〽️ 能量曲线</h3><div class="choices" data-group="energy">
+        <button class="choice" type="button" aria-pressed="false" data-value="gentle">🌤️ 温和启动</button><button class="choice" type="button" aria-pressed="true" data-value="rising">📈 逐渐升高</button><button class="choice" type="button" aria-pressed="false" data-value="steady">🌊 稳定节奏</button><button class="choice" type="button" aria-pressed="false" data-value="wake">⚡ 短促唤醒</button><button class="choice" type="button" aria-pressed="false" data-value="recover">🌙 安静恢复</button>
+      </div></div>
+
+      <div class="question"><h3>🗺️ 今天想进入哪个世界</h3><div class="choices" data-group="world">
+        <button class="choice" type="button" aria-pressed="true" data-value="library">📚 图书馆</button><button class="choice" type="button" aria-pressed="false" data-value="cafe">☕ 雨天咖啡馆</button><button class="choice" type="button" aria-pressed="false" data-value="forest">🌿 森林</button><button class="choice" type="button" aria-pressed="false" data-value="space">🚀 太空站</button><button class="choice" type="button" aria-pressed="false" data-value="game">🎮 探索地图</button><button class="choice" type="button" aria-pressed="false" data-value="city">🌃 夜晚城市</button>
+      </div></div>
+
+      <div class="question"><h3>🔀 熟悉还是探索</h3><div class="choices" data-group="familiarity">
+        <button class="choice" type="button" aria-pressed="false" data-value="familiar">🏠 熟悉优先</button><button class="choice" type="button" aria-pressed="true" data-value="balanced">⚖️ 平衡混合</button><button class="choice" type="button" aria-pressed="false" data-value="discover">✨ 新发现</button>
+      </div></div>
+
+      <div class="question"><h3>🎙️ 人声密度</h3><div class="choices" data-group="vocals">
+        <button class="choice" type="button" aria-pressed="true" data-value="instrumental">🎻 纯音乐为主</button><button class="choice" type="button" aria-pressed="false" data-value="sparse">💬 少量人声</button><button class="choice" type="button" aria-pressed="false" data-value="welcome">🎤 欢迎人声</button><button class="choice" type="button" aria-pressed="false" data-value="decide">🎲 交给 Spotify</button>
+      </div></div>
+    </section>
+
+    <section class="card music" aria-labelledby="music-title">
+      <div class="card-head"><div><p class="eyebrow">Ready</p><h2 id="music-title">你的 Spotify DJ request</h2></div><button class="button" id="remix" type="button">🔄 同样感觉，换种说法</button></div>
+      <p class="prompt" id="prompt" aria-live="polite"></p>
+      <div class="actions"><button class="button primary" id="launch" type="button">复制 prompt 并打开 Spotify DJ ↗</button><button class="button" id="copy" type="button">只复制</button><span class="status" id="status" role="status"></span></div>
+      <p class="note">Spotify 打开后，在 DJ 输入框粘贴并发送。</p>
+    </section>
+    <p class="privacy">🫧 <span>轻量模式：没有账号、cookies、analytics、数据库或浏览器存储。刷新页面后，所有选择都会重置。</span></p>
+  </main>
+
+  <script>
+    (() => {
+      const djUrl='https://open.spotify.com/playlist/37i9dQZF1EYkqdzj48dyYq';
+      const selected={color:'blue',energy:'rising',world:'library',familiarity:'balanced',vocals:'instrumental'};
+      const keys={color:['blue','green','yellow','orange','purple','silver'],energy:['gentle','rising','steady','wake','recover'],world:['library','cafe','forest','space','game','city'],familiarity:['familiar','balanced','discover'],vocals:['instrumental','sparse','welcome','decide']};
+      const words={
+        color:{blue:['clear deep-blue','cool ocean-blue','spacious midnight-blue'],green:['grounded moss-green','restorative forest-green','fresh leafy-green'],yellow:['warm sunlit-yellow','clear golden-yellow','gently optimistic yellow'],orange:['warm sunset-orange','forward-moving amber','soft glowing orange'],purple:['imaginative violet','dreamlike lavender','slightly mysterious purple'],silver:['focused black-and-silver','minimal metallic','nocturnal futuristic']},
+        energy:{gentle:['Begin softly and make the first few minutes feel effortless','Ease in with a light pulse and no sudden intensity','Open gently, leaving plenty of mental space'],rising:['Start calmly, then build clear momentum over the session','Begin low-key and gradually lift the energy','Use a smooth arc that becomes more propulsive'],steady:['Hold a consistent mid-tempo working rhythm','Keep an even pulse with no dramatic peaks','Settle into continuous, balanced forward motion'],wake:['Give me a brief crisp wake-up, then settle into focus','Open with a short energetic spark before becoming steady','Use a quick bright lift, then reduce the intensity'],recover:['Keep the arc quiet, spacious, and restorative','Let the energy stay low and gently replenishing','Use a calm recovery arc without becoming sleepy']},
+        world:{library:['late-library mix of warm jazzhop, soft piano, and understated rhythm','quiet-library blend of brushed beats and modern classical textures','scholarly mix of subtle grooves, calm keys, and restrained electronic detail'],cafe:['rainy-café mix of mellow jazz, soft beats, and intimate acoustic textures','window-rain blend of lo-fi rhythm, warm keys, and café ambience','cozy café mix with brushed percussion and gentle melodic detail'],forest:['forest mix of organic ambient detail, acoustic texture, and earthy rhythm','woodland blend of airy strings, soft percussion, and green electronic texture','nature-rich mix with flowing instrumentals and grounded rhythmic motion'],space:['space-station mix of cinematic electronics and weightless rhythm','orbital blend of spacious sound design and focused electronic pulse','retro-futuristic mix with synth atmosphere and steady propulsion'],game:['exploration-game soundtrack mix with curious melodies and light momentum','adventure-map blend of playful instrumentals and low-pressure cinematic motion','quest-like mix of game scores, rhythmic discovery, and gentle forward movement'],city:['night-city mix of sleek jazz-electronic textures and restrained beats','neon-city blend with polished grooves and nocturnal atmosphere','after-dark mix of city pop, soft synths, and focused rhythm']},
+        familiarity:{familiar:['Favor comforting favorites and overlooked songs I already know','Stay mostly with music that feels trusted and recognizable'],balanced:['Blend familiar favorites with a few fresh discoveries','Mix trusted songs with a small amount of new music'],discover:['Prioritize approachable discoveries while keeping the flow coherent','Introduce mostly new-to-me music without breaking the mood']},
+        vocals:{instrumental:['Keep it mostly instrumental and unobtrusive','Use instrumentals as the default and keep words out of the way'],sparse:['Use only sparse, non-distracting vocals','Allow occasional vocals but leave plenty of word-free space'],welcome:['Include expressive vocals when they strengthen the flow','Vocals are welcome as long as the sequence stays coherent'],decide:['Let my listening taste guide the balance of vocals and instrumentals','Choose the vocal balance from what usually works for me']}
+      };
+      const seed=new Uint32Array(1);crypto.getRandomValues(seed);let variation=seed[0];
+      const output=document.querySelector('#prompt'),status=document.querySelector('#status');
+      const phrase=(group,offset)=>{const list=words[group][selected[group]];return list[(variation+offset)%list.length]};
+      function generate(){output.textContent=`Play a ${phrase('color',0)} ${phrase('world',1)} for a short focused work session. ${phrase('energy',2)}. ${phrase('familiarity',3)}. ${phrase('vocals',4)}.`;status.textContent=''}
+      function sync(){Object.entries(selected).forEach(([group,value])=>document.querySelectorAll(`[data-group="${group}"] .choice`).forEach(button=>button.setAttribute('aria-pressed',button.dataset.value===value?'true':'false')))}
+      document.querySelectorAll('[data-group] .choice').forEach(button=>button.addEventListener('click',()=>{selected[button.closest('[data-group]').dataset.group]=button.dataset.value;variation++;sync();generate()}));
+      document.querySelector('#surprise').addEventListener('click',()=>{Object.entries(keys).forEach(([group,list],index)=>selected[group]=list[(variation+index*2)%list.length]);variation+=5;sync();generate()});
+      document.querySelector('#remix').addEventListener('click',()=>{variation++;generate()});
+      const copyPrompt=()=>navigator.clipboard.writeText(output.textContent);
+      document.querySelector('#copy').addEventListener('click',async()=>{try{await copyPrompt();status.textContent='✓ 已复制'}catch(_){status.textContent='请长按上面的 prompt 复制'}});
+      document.querySelector('#launch').addEventListener('click',async()=>{const spotify=window.open(djUrl,'_blank','noopener,noreferrer');try{await copyPrompt();status.textContent='✓ 已复制；到 Spotify 粘贴发送'}catch(_){status.textContent='Spotify 已打开；请手动复制 prompt'}if(!spotify)location.href=djUrl});
+      generate();
+    })();
+  </script>
+</body>
+</html>
